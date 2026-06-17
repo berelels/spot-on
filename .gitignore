@@ -1,0 +1,36 @@
+# Ambiente virtual Python
+backend/.venv/
+.venv/
+
+# Variáveis de ambiente (contém chave de API!)
+backend/.env
+.env
+
+# Cache e banco de dados local
+backend/cache.db
+*.db
+
+# Bytecode Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Distribuição / build
+dist/
+build/
+*.egg-info/
+
+# IDEs e editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log

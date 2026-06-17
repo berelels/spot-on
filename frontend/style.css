@@ -1,0 +1,439 @@
+/* =========================================================
+   Spot On! — Supplemental styles (Tailwind CDN + custom)
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+/* ---- Reset / Base ---- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:         #0f1117;
+  --surface:    #1a1d26;
+  --surface-2:  #20242f;
+  --border:     #2a2d3a;
+  --text:       #e2e8f0;
+  --muted:      #64748b;
+  --win:        #22c55e;
+  --draw:       #94a3b8;
+  --loss:       #ef4444;
+  --accent:     #6366f1;
+  --accent-glow:#6366f130;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---- Scrollbar ---- */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+.header {
+  text-align: center;
+  padding: 2.5rem 1rem 1.5rem;
+}
+
+.logo {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, #fff 30%, #6366f1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.logo span {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.tagline {
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin-top: 0.35rem;
+  letter-spacing: 0.02em;
+}
+
+/* =========================================================
+   CARD
+   ========================================================= */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 1.25rem;
+  padding: 1.75rem;
+  box-shadow: 0 4px 32px #00000040;
+}
+
+/* =========================================================
+   SELECT
+   ========================================================= */
+.select-wrapper {
+  position: relative;
+}
+
+.select-wrapper::after {
+  content: '▾';
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  pointer-events: none;
+  font-size: 0.85rem;
+}
+
+select {
+  width: 100%;
+  padding: 0.75rem 2.5rem 0.75rem 1rem;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.95rem;
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+select option { background: var(--surface); }
+
+/* =========================================================
+   BUTTON
+   ========================================================= */
+.btn-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.85rem 1.5rem;
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  color: #fff;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+  box-shadow: 0 4px 20px #6366f140;
+}
+
+.btn-primary:hover { opacity: 0.92; transform: translateY(-1px); box-shadow: 0 6px 24px #6366f160; }
+.btn-primary:active { transform: translateY(0); }
+.btn-primary:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+.btn-secondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  color: var(--accent);
+  border: 1.5px solid var(--accent);
+  border-radius: 0.75rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.btn-secondary:hover { background: var(--accent-glow); transform: translateY(-1px); }
+
+/* =========================================================
+   LABEL
+   ========================================================= */
+label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+}
+
+/* =========================================================
+   DIVIDER (vs)
+   ========================================================= */
+.vs-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--muted);
+  flex-shrink: 0;
+  margin-top: 1.5rem;
+}
+
+/* =========================================================
+   SPINNER
+   ========================================================= */
+.spinner-ring {
+  width: 3.5rem;
+  height: 3.5rem;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* =========================================================
+   RESULT CARD
+   ========================================================= */
+
+/* Header teams */
+.match-header {
+  text-align: center;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.match-teams {
+  font-size: clamp(1rem, 3vw, 1.5rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.team-home { color: var(--win); }
+.team-away { color: var(--loss); }
+.match-vs { color: var(--muted); font-weight: 400; font-size: 0.85em; }
+
+.league-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-top: 0.4rem;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.2rem 0.75rem;
+}
+
+/* Probability columns */
+.prob-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.prob-col {
+  background: var(--surface-2);
+  padding: 1.1rem 0.75rem;
+  text-align: center;
+}
+
+.prob-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.25rem;
+}
+
+.prob-team {
+  font-size: 0.72rem;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.prob-pct {
+  font-size: clamp(1.5rem, 4vw, 2.2rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+}
+
+.prob-col.home .prob-label, .prob-col.home .prob-pct { color: var(--win); }
+.prob-col.draw .prob-label, .prob-col.draw .prob-pct { color: var(--draw); }
+.prob-col.away .prob-label, .prob-col.away .prob-pct { color: var(--loss); }
+
+/* Probability bar */
+.prob-bar-track {
+  height: 6px;
+  background: var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+  display: flex;
+}
+
+.prob-bar-home { background: var(--win); transition: width 0.8s cubic-bezier(0.23,1,0.32,1); }
+.prob-bar-draw { background: var(--draw); transition: width 0.8s cubic-bezier(0.23,1,0.32,1) 0.1s; }
+.prob-bar-away { background: var(--loss); transition: width 0.8s cubic-bezier(0.23,1,0.32,1) 0.2s; }
+
+/* Expected goals */
+.expected-goals {
+  text-align: center;
+  font-size: 0.83rem;
+  color: var(--muted);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 0.6rem;
+  padding: 0.6rem 1rem;
+}
+
+.expected-goals strong { color: var(--text); font-weight: 600; }
+
+/* Scorelines grid */
+.scores-section-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+.scores-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.5rem;
+}
+
+.score-tile {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 0.6rem;
+  padding: 0.65rem 0.35rem;
+  text-align: center;
+  transition: border-color 0.2s;
+}
+
+.score-tile:hover { border-color: var(--accent); }
+
+.score-tile.top-pick {
+  border-color: var(--accent);
+  background: linear-gradient(135deg, #6366f115, #6366f105);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.score-value {
+  font-size: clamp(0.9rem, 2.5vw, 1.15rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.score-prob {
+  font-size: 0.68rem;
+  color: var(--muted);
+  margin-top: 0.2rem;
+}
+
+.score-tile.top-pick .score-value { color: var(--accent); }
+.score-tile.top-pick .score-prob { color: #818cf8; }
+
+/* Footer meta */
+.result-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--muted);
+  padding-top: 0.25rem;
+}
+
+.confidence-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.confidence-high   { background: #22c55e20; color: #22c55e; border: 1px solid #22c55e40; }
+.confidence-medium { background: #f59e0b20; color: #f59e0b; border: 1px solid #f59e0b40; }
+.confidence-low    { background: #ef444420; color: #ef4444; border: 1px solid #ef444440; }
+
+/* =========================================================
+   ERROR TOAST
+   ========================================================= */
+.error-banner {
+  background: #ef444418;
+  border: 1px solid #ef444440;
+  border-radius: 0.75rem;
+  padding: 0.9rem 1.1rem;
+  font-size: 0.88rem;
+  color: #fca5a5;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+}
+
+.error-banner svg { flex-shrink: 0; margin-top: 1px; }
+
+/* =========================================================
+   FADE-IN
+   ========================================================= */
+.fade-in {
+  animation: fadeIn 0.4s ease both;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================================================
+   SECTION DIVIDER
+   ========================================================= */
+.section-sep {
+  height: 1px;
+  background: var(--border);
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+@media (max-width: 480px) {
+  .scores-grid { grid-template-columns: repeat(5, 1fr); gap: 0.35rem; }
+  .score-tile { padding: 0.55rem 0.2rem; }
+}

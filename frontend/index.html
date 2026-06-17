@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spot On! — Previsão de Futebol com Estatística</title>
+  <meta name="description" content="Previsão de resultados de futebol com o Modelo de Poisson + Dixon-Coles. Probabilidades de vitória, empate e derrota, e os placares mais prováveis para qualquer confronto." />
+  <link rel="stylesheet" href="style.css" />
+  <!-- Tailwind CDN for utility classes -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            surface: '#1a1d26',
+            surface2: '#20242f',
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- ============================================================
+       HEADER
+  ============================================================ -->
+  <header class="header">
+    <h1 class="logo">⚽ Spot <span>On!</span></h1>
+    <p class="tagline">Probabilidades baseadas em dados, não em palpites.</p>
+  </header>
+
+  <!-- ============================================================
+       MAIN CONTENT
+  ============================================================ -->
+  <main class="flex-1 flex flex-col items-center px-4 pb-12 gap-4">
+
+    <!-- Error Banner (global) -->
+    <div id="error-banner" class="error-banner hidden w-full max-w-xl">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <span id="error-msg"></span>
+    </div>
+
+    <!-- ===========================================================
+         VIEW 1 — SELECTION
+    =========================================================== -->
+    <div id="view-select" class="card w-full max-w-xl flex flex-col gap-5">
+
+      <div>
+        <h2 class="text-base font-bold mb-1 text-white">Nova Análise</h2>
+        <p class="text-xs text-slate-500">Escolha a liga ou competição e os times para calcular as probabilidades.</p>
+      </div>
+
+      <!-- Liga -->
+      <div>
+        <label for="sel-league">Competição</label>
+        <div class="select-wrapper">
+          <select id="sel-league">
+            <option value="">— Carregando… —</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Times side by side -->
+      <div class="flex items-end gap-2">
+        <!-- Mandante -->
+        <div class="flex-1">
+          <label for="sel-home" id="label-home">🏠 Mandante</label>
+          <div class="select-wrapper">
+            <select id="sel-home" disabled>
+              <option value="">— Escolha um time —</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- VS badge -->
+        <div class="vs-badge">vs</div>
+
+        <!-- Visitante -->
+        <div class="flex-1">
+          <label for="sel-away" id="label-away">✈️ Visitante</label>
+          <div class="select-wrapper">
+            <select id="sel-away" disabled>
+              <option value="">— Escolha um time —</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Analyze button -->
+      <button id="btn-analyze" class="btn-primary" disabled>
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+        </svg>
+        Analisar
+      </button>
+    </div>
+
+    <!-- ===========================================================
+         VIEW 2 — LOADING
+    =========================================================== -->
+    <div id="view-loading" class="hidden card w-full max-w-xl flex flex-col items-center gap-5 py-12">
+      <div class="spinner-ring"></div>
+      <div class="text-center">
+        <p class="text-white font-semibold text-sm">Calculando probabilidades…</p>
+        <p class="text-slate-500 text-xs mt-1">Modelo de Poisson com correção Dixon-Coles</p>
+      </div>
+    </div>
+
+    <!-- ===========================================================
+         VIEW 3 — RESULT
+    =========================================================== -->
+    <div id="view-result" class="hidden card w-full max-w-xl flex flex-col gap-4">
+
+      <!-- Match header -->
+      <div class="match-header">
+        <div class="match-teams">
+          <span id="res-home" class="team-home">—</span>
+          <span class="match-vs">vs</span>
+          <span id="res-away" class="team-away">—</span>
+        </div>
+        <div class="mt-2 flex justify-center">
+          <span class="league-badge">
+            <span id="league-icon">⚽</span>
+            <span id="res-league">—</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Probability columns -->
+      <div class="prob-grid">
+        <div class="prob-col home">
+          <div class="prob-label" id="res-home-label">Vitória</div>
+          <div class="prob-team" id="res-home-team">—</div>
+          <div class="prob-pct" id="res-home-pct">—</div>
+        </div>
+        <div class="prob-col draw">
+          <div class="prob-label" id="res-draw-label">Empate</div>
+          <div class="prob-team">&nbsp;</div>
+          <div class="prob-pct" id="res-draw-pct">—</div>
+        </div>
+        <div class="prob-col away">
+          <div class="prob-label" id="res-away-label">Derrota</div>
+          <div class="prob-team" id="res-away-team">—</div>
+          <div class="prob-pct" id="res-away-pct">—</div>
+        </div>
+      </div>
+
+      <!-- Probability bar -->
+      <div class="prob-bar-track">
+        <div id="bar-home" class="prob-bar-home" style="width:0%"></div>
+        <div id="bar-draw" class="prob-bar-draw" style="width:0%"></div>
+        <div id="bar-away" class="prob-bar-away" style="width:0%"></div>
+      </div>
+
+      <!-- Expected goals -->
+      <div class="expected-goals">
+        ⚽ Gols esperados &mdash;
+        <strong id="res-lambda-home">—</strong>
+        &nbsp;·&nbsp;
+        <strong id="res-lambda-away">—</strong>
+      </div>
+
+      <div class="section-sep"></div>
+
+      <!-- Scorelines -->
+      <div>
+        <p class="scores-section-title mb-3">🎯 Placares mais prováveis</p>
+        <div id="scores-grid" class="scores-grid">
+          <!-- Tiles injected by JS -->
+        </div>
+      </div>
+
+      <div class="section-sep"></div>
+
+      <!-- Footer -->
+      <div class="result-footer">
+        <span id="res-data-note" class="flex-1">—</span>
+        <span id="confidence-badge" class="confidence-badge">—</span>
+      </div>
+
+      <!-- New analysis -->
+      <button id="btn-new" class="btn-secondary mt-1">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/>
+        </svg>
+        Nova análise
+      </button>
+    </div>
+
+  </main>
+
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <footer class="text-center text-xs text-slate-600 py-5 px-4">
+    Spot On! usa o <strong class="text-slate-500">Modelo de Poisson com correção Dixon-Coles</strong>.
+    Dados via football-data.org · Para fins estatísticos e educacionais.
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
